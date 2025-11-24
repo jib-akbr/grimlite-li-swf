@@ -45,9 +45,10 @@
 			return _loc_5 < _loc_2.cd ? (Root.FalseString) : (Root.TrueString);
 		}
 
-		public static function GetMonstersInCell():String
+		public static function GetMonstersInCell(cell:String):String
 		{
-			var mons:Array = Root.Game.world.getMonstersByCell(Root.Game.world.strFrame);
+			//Required for grabbing allmonsters
+			var mons:Array = Root.Game.world.getMonstersByCell(cell);
 			var ret:Array = [];
 			for (var id:Object in mons)
 			{

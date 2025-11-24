@@ -543,6 +543,41 @@
 			return value;
         }
 
+		public static function GetAurasDuration(param1:String, param2:String) : String
+    	{
+    	    var Auras:*;
+    	    var dur:int;
+    	    var ts:int;
+    	    var now:int;
+    	    var Aura:* = undefined;
+    	    var selfTarget:* = param1 == "True";
+    	    var hasTarget:* = Root.Game.world.myAvatar.target != null && Root.Game.world.myAvatar.target.dataLeaf.intHP > 0;
+    	    if(!selfTarget && !hasTarget)
+    	    {
+    	       return "Invalid Target";
+    	    }
+    	    Auras = selfTarget ? Root.Game.world.myAvatar.dataLeaf.auras : Root.Game.world.myAvatar.target.dataLeaf.auras;
+    	    try
+    	    {
+    	       for each(Aura in Auras)
+    	       {
+    	          if(Aura.nam.toLowerCase().replace(" ","") == param2.toLowerCase().replace(" ",""))
+    	          {
+    	             dur = int(Aura.dur) * 1000;
+    	             ts = int(Aura.ts);
+    	             now = new Date().getTime() - 1000;
+    	             Externalizer.debugS(Caller.toJson(Aura));
+    	             return dur + "/" + (now - ts);
+    	          }
+    	       }
+    	    }
+    	    catch(e:Error)
+    	    {
+    	       return "Samting wong" + e;
+    	    }
+    	    return "Aura Not Found";
+    	}
+
 		public static function GetAccessLevel(username: String) : int {
             var avatars:* = Root.Game.world.avatars;
             var accessLevel;

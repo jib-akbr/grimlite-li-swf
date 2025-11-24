@@ -77,6 +77,7 @@
 						var item = q.oItems[req.ItemID];
 						_req.sName = item.sName;
 						_req.ItemID = item.ItemID;
+						_req.bTemp = item.bTemp; //Max turn in needed this
 						_req.iQty = req.iQty;
 						requirements.push(_req);
 					}

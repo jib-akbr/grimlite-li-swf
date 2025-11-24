@@ -71,6 +71,7 @@
 			this.addCallback("GetAvatars", Player.GetAvatars);
 			this.addCallback("IsMember", Player.IsMember);
 			this.addCallback("GetAurasValue", Player.GetAurasValue);
+        	this.addCallback("AuraDuration",Player.GetAurasDuration);
 			this.addCallback("ChangeColorName", Player.ChangeColorName);
 			this.addCallback("GetAccessLevel", Player.GetAccessLevel);
 			

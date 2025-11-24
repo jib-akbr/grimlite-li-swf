@@ -147,5 +147,130 @@ package grimoire
 			var array:Array = packet.substr(1, packet.length - 2).split("%");
 			_handler.handleMessage(array.splice(1, array.length - 1), "str");
 		}
+
+		public static function toJson(obj:*, maxDepth:int = 2) : String
+        {
+           var outputBuffer:Array = [];
+           _toJsonRecursive(obj,0,maxDepth,outputBuffer);
+           return outputBuffer.join("");
+        }
+        
+        private static function _toJsonRecursive(obj:*, depth:int, maxDepth:int, buffer:Array) : void
+        {
+           var arr:Array;
+           var i:int;
+           var isFirst:Boolean;
+           var key:String;
+           if(obj == null)
+           {
+              buffer.push("null");
+              return;
+           }
+           if(obj is String)
+           {
+              _escapeStringOptimized(String(obj),buffer);
+              return;
+           }
+           if(obj is Number || obj is int || obj is uint || obj is Boolean)
+           {
+              buffer.push(String(obj));
+              return;
+           }
+           if(depth >= maxDepth)
+           {
+              if(obj is Array)
+              {
+                 buffer.push("\"[...]\"");
+              }
+              else
+              {
+                 buffer.push("\"{...}\"");
+              }
+              return;
+           }
+           if(obj is Array)
+           {
+              arr = obj as Array;
+              buffer.push("[");
+              i = 0;
+              while(i < arr.length)
+              {
+                 if(i > 0)
+                 {
+                    buffer.push(", ");
+                 }
+                 _toJsonRecursive(arr[i],depth + 1,maxDepth,buffer);
+                 i++;
+              }
+              buffer.push("]");
+              return;
+           }
+           buffer.push("{");
+           isFirst = true;
+           for(key in obj)
+           {
+              if(obj.hasOwnProperty(key))
+              {
+                 if(isFirst)
+                 {
+                    isFirst = false;
+                 }
+                 else
+                 {
+                    buffer.push(", ");
+                 }
+                 _escapeStringOptimized(key,buffer);
+                 buffer.push(":");
+                 try
+                 {
+                    _toJsonRecursive(obj[key],depth + 1,maxDepth,buffer);
+                 }
+                 catch(e:Error)
+                 {
+                    buffer.push("\"<error>\"");
+                 }
+              }
+           }
+           buffer.push("}");
+        }
+        
+        private static function _escapeStringOptimized(s:String, buffer:Array) : void
+        {
+           buffer.push("\"");
+           var len:int = s.length;
+           var i:int = 0;
+           while(i < len)
+           {
+              var char:String = s.charAt(i);
+              switch(char)
+              {
+                 case "\\":
+                    buffer.push("\\\\");
+                    break;
+                 case "\"":
+                    buffer.push("\\\"");
+                    break;
+                 case "\n":
+                    buffer.push("\\n");
+                    break;
+                 case "\r":
+                    buffer.push("\\r");
+                    break;
+                 case "\t":
+                    buffer.push("\\t");
+                    break;
+                 case "\f":
+                    buffer.push("\\f");
+                    break;
+                 case "\b":
+                    buffer.push("\\b");
+                    break;
+                 default:
+                    buffer.push(char);
+              }
+              i++;
+           }
+           buffer.push("\"");
+        }
     }
 }
