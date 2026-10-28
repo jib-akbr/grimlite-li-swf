@@ -1,4 +1,4 @@
-﻿package grimoire.game
+package grimoire.game
 {
 	import flash.filters.*;
 	import grimoire.*;
@@ -308,7 +308,7 @@
 
 		public static function GoTo(username:String) : void
 		{
-			Root.Game.world.goto(username);
+			Root.Game.world["goto"](username);
 		}
 		
 		public static function UseBoost(id:String):void
