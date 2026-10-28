@@ -1,4 +1,4 @@
-﻿package grimoire.game
+package grimoire.game
 {
 	import grimoire.Root;
 	import flash.utils.getQualifiedClassName;
@@ -241,7 +241,7 @@
 					break;
 				}
 			}
-			return result;
+			return result.toString();
 		}
 
 		public static function GetPlayerHealthPercentage(target:String) : String
@@ -258,7 +258,7 @@
 					break;
 				}
 			}
-			return result;
+			return result.toString();
 		}
 		
 		public static function RejectDropR(itemName:String) : void

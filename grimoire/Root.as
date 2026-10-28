@@ -133,6 +133,7 @@
 			Game.params.doSignup = this.doSignup;
 			Game.params.test = false;
 			
+			Game.sfc.debug = true;
 			Game.sfc.addEventListener(SFSEvent.onExtensionResponse, this.OnExtensionResponse);
 			GameDomain = LoaderInfo(event.target).applicationDomain;
 			
