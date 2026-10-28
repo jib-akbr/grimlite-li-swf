@@ -47,9 +47,13 @@
 		
 		public static function SetSkipCutscenes():void
 		{
-			while (Root.Game.mcExtSWF.numChildren > 0)
+			if (Root.Game.mcExtSWF.numChildren > 0)
 			{
-				Root.Game.mcExtSWF.removeChildAt(0);
+				Root.Game.clearExternamSWF();
+			}
+			while (Root.Game.ldrMC.numChildren > 0)
+			{
+				Root.Game.ldrMC.removeChildAt(0);
 			}
 			Root.Game.world.visible = true;
 			Root.Game.showInterface();

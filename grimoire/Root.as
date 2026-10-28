@@ -82,7 +82,7 @@
 			this.urlLoader.removeEventListener(Event.COMPLETE,this.OnDataComplete);
 			var vars:Object = JSON.parse(event.target.data);
 			this.sFile = vars.sFile + "?ver=" + vars.sVersion;
-			this.sTitle = vars.sTitle;
+			// this.sTitle = vars.sTitle;
 			this.isEU = vars.isEU == "true";
 			this.isWeb = false;
 			this.doSignup = false;
@@ -118,7 +118,6 @@
 			this.stg.removeChildAt(0);
 			Game = this.stg.addChildAt(event.currentTarget.content, 0);
 			//Game = this.stg.addChild(this.loader.content);
-			this.LoadAstolfo();
 			
 			for (var param:String in root.loaderInfo.parameters)
 			{
@@ -140,12 +139,64 @@
 			Game.sfc.addEventListener(SFSEvent.onConnectionLost, this.OnConnectionLost);
 			Game.sfc.addEventListener(SFSEvent.onConnection, this.OnConnection);
 			Game.sfc.addEventListener(SFSEvent.onJoinRoomError, this.OnJoinRoomError);
+			Game.sfc.debug = True;
 			Game.sfc.addEventListener(SFSEvent.onDebugMessage, this.PacketReceived);
+			Game.addEventListener(MouseEvent.CLICK, this.onGameClick);	
 			Game.loginLoader.addEventListener(Event.COMPLETE, this.OnLoginComplete);	
 			//getServers();
 			addEventListener(Event.ENTER_FRAME, this.EnterFrame);
 			trace("OnComplete Stage");
+			this.LoadAstolfo();
 		}
+
+		private function onGameClick(event:MouseEvent) : void
+      {
+         if(event == null)
+         {
+            return;
+         }
+         var className:String = getQualifiedClassName(event.target.parent);
+         trace(className);
+         this.external.debug(GetDisplayPath(event.target as DisplayObject));
+         this.external.debug("Target : " + event.target.name + " (" + event.target + ")");
+         this.external.debug("Parent : " + event.target.parent.name + " (" + event.target.parent + ")");
+         if(event.target.parent.name == "monsterDropsPanel")
+         {
+            this.external.call("openWebsite","https://aqwwiki.wikidot.com/" + Game.ui.getChildByName("monsterDropsPanel").getChildAt(4).text);
+         }
+         switch(event.target.name)
+         {
+            case "btCharPage":
+               this.external.call("openWebsite","https://account.aq.com/CharPage?id=" + event.target.parent.txtUserName.text);
+               return;
+            case "btnWiki":
+               if(event.target.parent.parent.parent.name == "qRewardPrev")
+               {
+                  this.external.call("openWebsite","https://aqwwiki.wikidot.com/" + Game.ui.getChildByName("qRewardPrev").cnt.strTitle.text);
+               }
+               else if(className.indexOf("LPFFrameItemPreview") > -1)
+               {
+                  this.external.call("openWebsite","https://aqwwiki.wikidot.com/" + event.target.parent.tInfo.getLineText(0));
+               }
+               else if(className.indexOf("LPFFrameHousePreview") > -1)
+               {
+                  this.external.call("openWebsite","https://aqwwiki.wikidot.com/" + Game.ui.mcPopup.getChildByName("mcInventory").previewPanel.frames[3].mc.tInfo.getLineText(0));
+               }
+               else if(className.indexOf("mcQFrame") > -1)
+               {
+                  this.external.call("openWebsite","https://cse.google.com/cse?oe=utf8&ie=utf8&source=uds&safe=active&sort=&cx=015511893259151479029:wctfduricyy&start=0#gsc.tab=0&gsc.q=" + Game.getInstanceFromModalStack("QFrameMC").qData.sName);
+               }
+               return;
+            case "hit":
+               if(className.indexOf("cProto") > -1 && event.target.parent.ti.text.toLowerCase() == "wiki monster")
+               {
+                  this.external.call("openWebsite","https://aqwwiki.wikidot.com/" + Game.world.myAvatar.target.objData.strMonName || "monsters");
+               }
+               return;
+            default:
+               return;
+         }
+      }
 
 		private function LoadAstolfo() : void
 		{
